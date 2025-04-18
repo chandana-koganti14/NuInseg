@@ -56,7 +56,6 @@ def load_model(model_name):
 
         # Download the model if it doesn't exist locally
         if not local_path.exists():
-            st.write(f"Downloading model from: {model_url}")
             os.makedirs(local_path.parent, exist_ok=True)
             response = requests.get(model_url)
             if response.status_code != 200:
@@ -67,10 +66,9 @@ def load_model(model_name):
 
         # Verify the file size
         file_size = local_path.stat().st_size / (1024 * 1024)  # Size in MB
-        st.write(f"Model file size: {file_size:.2f} MB")
-
+        
         # Load the model
-        st.write(f"Loading model from: {local_path}")
+        
         try:
             model = YOLO(local_path)
             st.success(f"Model {model_name} loaded successfully")
