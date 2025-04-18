@@ -24,11 +24,6 @@ st.set_page_config(
     layout="wide"
 )
 
-# Temporary setup commands (must come AFTER set_page_config)
-st.write("Initializing environment...")
-clear_result = subprocess.run(["/bin/bash", "clear_cache.sh"], capture_output=True, text=True)
-setup_result = subprocess.run(["/bin/bash", "post_setup.sh"], capture_output=True, text=True)
-st.write("Setup logs:", setup_result.stdout)
 
 # Configure models
 MODELS = {
