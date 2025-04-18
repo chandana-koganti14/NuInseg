@@ -27,15 +27,15 @@ df = pd.DataFrame(metrics_data)
 # Pre-trained models configuration
 MODELS = {
     "YOLOv10n": {
-        "path": "/mnt/storage2/PanNuke/NuInseg/NuInsegyolov10/100epochs/weights/best.pt",
+        "path": "models/yolov10n.pt",
         "description": "Base model with 8.2 GFLOPs"
     },
     "YOLO11n": {
-        "path": "/mnt/storage2/PanNuke/NuInseg/NuInsegyolov11/100epochs2/weights/best.pt",
+        "path": "models/yolov11n.pt",
         "description": "Intermediate model with 6.3 GFLOPs"
     },
     "YOLOv12n": {
-        "path": "/mnt/storage2/PanNuke/NuInseg/NuInsegyolov12/100epochs/weights/best.pt",
+        "path": "models/yolov12n.pt",
         "description": "Optimized model with 6.3 GFLOPs and 4.24it/s speed"
     }
 }
