@@ -30,15 +30,15 @@ df = pd.DataFrame(metrics_data)
 # ========================
 MODELS = {
     "YOLOv10n": {
-        "path": "https://drive.google.com/file/d/1ngcrDc5GLt7FgWnLAXNw6d5CM3xJDJ22/view?usp=sharing",
+        "path": "https://drive.google.com/uc?export=download&id=1ngcrDc5GLt7FgWnLAXNw6d5CM3xJDJ22",
         "description": "Base model with 8.2 GFLOPs"
     },
     "YOLO11n": {
-        "path": "https://drive.google.com/file/d/1hKb7x7rRmfBfyBQgN7qk1TtVuJruqUis/view?usp=sharing",
+        "path": "https://drive.google.com/uc?export=download&id=1hKb7x7rRmfBfyBQgN7qk1TtVuJruqUis",
         "description": "Intermediate model with 6.3 GFLOPs"
     },
     "YOLOv12n": {
-        "path": "https://drive.google.com/file/d/1MvPSOzE-DOH6CkCCLcqXLbPqIy6ov8BR/view?usp=sharing",
+        "path": "https://drive.google.com/uc?export=download&id=1MvPSOzE-DOH6CkCCLcqXLbPqIy6ov8BR",
         "description": "Optimized model with 6.3 GFLOPs and 4.24it/s speed"
     }
 }
