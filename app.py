@@ -21,7 +21,10 @@ metrics_data = {
     "Inference Speed (it/s)": [1.47, 2.92, 4.24],
     "Parameters": ["2,694,806", "2,582,347", "2,556,923"]
 }
+import os
 
+st.write("Current Working Directory:", os.getcwd())
+st.write("Files in Directory:", os.listdir("."))
 df = pd.DataFrame(metrics_data)
 
 # ========================
