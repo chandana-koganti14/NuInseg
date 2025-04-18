@@ -7,6 +7,7 @@ import seaborn as sns
 import numpy as np
 import os
 from pathlib import Path
+import requests
 
 # ========================
 # Data Configuration
@@ -22,23 +23,56 @@ metrics_data = {
     "Parameters": ["2,694,806", "2,582,347", "2,556,923"]
 }
 
+df = pd.DataFrame(metrics_data)
+
 # ========================
 # Pre-trained models configuration
 # ========================
 MODELS = {
     "YOLOv10n": {
-        "path": "https://drive.google.com/file/d/1ngcrDc5GLt7FgWnLAXNw6d5CM3xJDJ22/view?usp=sharing",
+        "path": "https://drive.google.com/uc?id=YOUR_GOOGLE_DRIVE_FILE_ID_FOR_YOLOV10N",
         "description": "Base model with 8.2 GFLOPs"
     },
     "YOLO11n": {
-        "path": "https://drive.google.com/file/d/1hKb7x7rRmfBfyBQgN7qk1TtVuJruqUis/view?usp=sharing",
+        "path": "https://drive.google.com/uc?id=YOUR_GOOGLE_DRIVE_FILE_ID_FOR_YOLO11N",
         "description": "Intermediate model with 6.3 GFLOPs"
     },
     "YOLOv12n": {
-        "path": "https://drive.google.com/file/d/1MvPSOzE-DOH6CkCCLcqXLbPqIy6ov8BR/view?usp=sharing",
+        "path": "https://drive.google.com/uc?id=YOUR_GOOGLE_DRIVE_FILE_ID_FOR_YOLOV12N",
         "description": "Optimized model with 6.3 GFLOPs and 4.24it/s speed"
     }
 }
+
+# ========================
+# Model Loading
+# ========================
+@st.cache_resource
+def load_model(model_name):
+    model_url = MODELS[model_name]["path"]
+    local_path = Path("models") / Path(model_url).name
+
+    # Download the model if it doesn't exist locally
+    if not local_path.exists():
+        st.write(f"Downloading model from: {model_url}")
+        os.makedirs(local_path.parent, exist_ok=True)
+        response = requests.get(model_url, stream=True)
+        if response.status_code == 200:
+            with open(local_path, "wb") as f:
+                for chunk in response.iter_content(chunk_size=1024):
+                    f.write(chunk)
+            st.success(f"Model downloaded successfully: {local_path}")
+        else:
+            st.error(f"Failed to download model from: {model_url}")
+            return None
+
+    # Load the model
+    try:
+        model = YOLO(local_path)
+        st.write(f"Model {model_name} loaded successfully")
+        return model
+    except Exception as e:
+        st.error(f"Error loading model {model_name}: {str(e)}")
+        return None
 
 # ========================
 # Streamlit Configuration
@@ -48,42 +82,6 @@ st.set_page_config(
     page_icon="🔬",
     layout="wide"
 )
-
-# ========================
-# Model Loading
-# ========================
-@st.cache_resource
-def load_model(model_name):
-    try:
-        BASE_DIR = Path(__file__).parent  # Define inside function
-        model_path = str(BASE_DIR / MODELS[model_name]["path"])
-
-        st.write(f"Loading model from: {model_path}")
-
-        if not os.path.exists(model_path):
-            st.error(f"Model file not found at: {model_path}")
-            raise FileNotFoundError(f"Model file missing at {model_path}")
-
-        # Verify model file exists
-        if Path(model_path).stat().st_size < 1024:
-            st.error(f"Model file corrupt or too small: {model_path}")
-            raise ValueError(f"Model file corrupt or too small")
-
-        model = YOLO(model_path)
-
-        # Verify the model architecture
-        if not hasattr(model, "predictor"):
-            st.error(f"Invalid YOLO model architecture: {model_name}")
-            raise ValueError(f"Invalid YOLO model architecture for {model_name}")
-
-        st.write(f"Model {model_name} loaded successfully")
-        return model
-    except FileNotFoundError as e:  # Capture the FileNotFoundError
-        st.error(f"FileNotFoundError: {str(e)}")
-        return None  # Return None if loading fails
-    except Exception as e:  # Capture all other exceptions
-        st.error(f"Error loading model {model_name}: {str(e)}")
-        return None
 
 # ========================
 # Main Interface
@@ -107,7 +105,7 @@ with analysis_tab:
 
     if model is not None:
         # Main detection interface
-        uploaded_file = st.file_uploader("Upload histology image", type=["png","jpg","tiff"], key="detection_uploader")
+        uploaded_file = st.file_uploader("Upload histology image", type=["png", "jpg", "tiff"], key="detection_uploader")
 
         if uploaded_file:
             image = Image.open(uploaded_file)
@@ -178,23 +176,23 @@ with metrics_tab:
     viz_tab1, viz_tab2, viz_tab3 = st.tabs(["Accuracy Metrics", "Efficiency Analysis", "Model Breakdown"])
     
     with viz_tab1:
-        fig1, ax1 = plt.subplots(figsize=(10,6))
+        fig1, ax1 = plt.subplots(figsize=(10, 6))
         sns.barplot(data=df, x="Model", y="mAP50", palette="viridis", ax=ax1)
         ax1.set_title("mAP50 Comparison")
         st.pyplot(fig1)
         
-        fig2, ax2 = plt.subplots(figsize=(10,6))
+        fig2, ax2 = plt.subplots(figsize=(10, 6))
         sns.barplot(data=df, x="Model", y="mAP50-95", palette="magma", ax=ax2)
         ax2.set_title("mAP50-95 Comparison")
         st.pyplot(fig2)
     
     with viz_tab2:
-        fig3, ax3 = plt.subplots(figsize=(10,6))
+        fig3, ax3 = plt.subplots(figsize=(10, 6))
         sns.barplot(data=df, x="Model", y="GFLOPs", palette="coolwarm", ax=ax3)
         ax3.set_title("Computational Requirements")
         st.pyplot(fig3)
         
-        fig4, ax4 = plt.subplots(figsize=(10,6))
+        fig4, ax4 = plt.subplots(figsize=(10, 6))
         sns.lineplot(data=df, x="Model", y="Inference Speed (it/s)", marker="o", color="#FF6B6B", ax=ax4)
         ax4.set_title("Inference Speed Comparison")
         st.pyplot(fig4)
@@ -216,7 +214,7 @@ with metrics_tab:
         angles = np.linspace(0, 2 * np.pi, len(categories), endpoint=False).tolist()
         angles += angles[:1]
         
-        fig5 = plt.figure(figsize=(8,8))
+        fig5 = plt.figure(figsize=(8, 8))
         ax5 = fig5.add_subplot(111, polar=True)
         
         for idx, model in df.iterrows():
