@@ -1,12 +1,12 @@
 streamlit==1.31.0
-ultralytics==8.3.40  # Match your local version
-opencv-python-headless==4.10.0.84  # From your pip list
-pandas==2.0.3  # From your pip list
-numpy==1.24.4  # Critical: Must be <2.0.0 for Streamlit compatibility
-matplotlib==3.7.5  # From your pip list
+ultralytics==8.3.40
+opencv-python-headless==4.10.0.84
+pandas==2.0.3
+numpy==1.26.0  # KEY FIX: Compatible with opencv-python-headless
+matplotlib==3.7.5
 seaborn==0.13.2
-Pillow==10.4.0  # From your pip list
-torch==2.4.1  # Essential for YOLO
-torchvision==0.19.1  # Essential for YOLO
-setuptools==60.2.0 # this is from ur pip list. use compatible
-wheel==0.43.0
+Pillow==10.4.0
+torch==2.4.1
+torchvision==0.19.1
+setuptools==60.2.0
+
