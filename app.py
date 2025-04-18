@@ -5,6 +5,20 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
+import subprocess
+import streamlit as st
+
+# Clear cache
+clear_cache_result = subprocess.run(["/bin/bash", "clear_cache.sh"], capture_output=True, text=True)
+st.write("Clear Cache Output:")
+st.write(clear_cache_result.stdout)
+st.write(clear_cache_result.stderr)
+
+# Post setup
+post_setup_result = subprocess.run(["/bin/bash", "post_setup.sh"], capture_output=True, text=True)
+st.write("Post Setup Output:")
+st.write(post_setup_result.stdout)
+st.write(post_setup_result.stderr)
 
 # ========================
 # Data Configuration
