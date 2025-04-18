@@ -50,7 +50,9 @@ MODELS = {
 def load_model(model_name):
     try:
         model_url = MODELS[model_name]["path"]
-        local_path = Path("models") / Path(model_url).name
+        # Extract the file ID from the Google Drive URL
+        file_id = model_url.split("=")[-1]
+        local_path = Path("models") / f"{model_name}_best.pt"  # Use a proper filename
 
         # Download the model if it doesn't exist locally
         if not local_path.exists():
@@ -63,21 +65,23 @@ def load_model(model_name):
             with open(local_path, "wb") as f:
                 f.write(response.content)
 
+        # Verify the file size
+        file_size = local_path.stat().st_size / (1024 * 1024)  # Size in MB
+        st.write(f"Model file size: {file_size:.2f} MB")
+
         # Load the model
         st.write(f"Loading model from: {local_path}")
-        model = YOLO(local_path)
-
-        # Verify the model architecture
-        if not hasattr(model, "predictor"):
-            st.error(f"Invalid YOLO model architecture: {model_name}")
+        try:
+            model = YOLO(local_path)
+            st.success(f"Model {model_name} loaded successfully")
+        except Exception as e:
+            st.error(f"Error loading model: {e}")
             return None
 
-        st.success(f"Model {model_name} loaded successfully")
         return model
     except Exception as e:
         st.error(f"Error loading model {model_name}: {str(e)}")
         return None
-
 # ========================
 # Streamlit Configuration
 # ========================
