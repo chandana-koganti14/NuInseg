@@ -85,7 +85,7 @@ if uploaded_file is not None: # Check if the file is uploaded
         col1, col2 = st.columns([1, 2])
 
         with col1:
-            st.image(image, caption="Original Image", use_container_width=True)
+            st.image(image, caption="Original Image")
             conf_thresh = st.slider("Confidence Threshold", 0.1, 0.9, 0.5)
 
             if st.button("Run Analysis"):
@@ -96,7 +96,7 @@ if uploaded_file is not None: # Check if the file is uploaded
 
         if 'results' in st.session_state:
             with col2:
-                st.image(st.session_state.results.plot(), caption="Detection Results", use_container_width=True)
+                st.image(st.session_state.results.plot(), caption="Detection Results")
 
                 # Detection metrics
                 nuclei_count = len(st.session_state.boxes)
