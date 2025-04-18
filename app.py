@@ -48,27 +48,31 @@ MODELS = {
 # ========================
 @st.cache_resource
 def load_model(model_name):
-    model_url = MODELS[model_name]["path"]
-    local_path = Path("models") / Path(model_url).name
+    try:
+        model_url = MODELS[model_name]["path"]
+        local_path = Path("models") / Path(model_url).name
 
-    # Download the model if it doesn't exist locally
-    if not local_path.exists():
-        st.write(f"Downloading model from: {model_url}")
-        os.makedirs(local_path.parent, exist_ok=True)
-        response = requests.get(model_url, stream=True)
-        if response.status_code == 200:
+        # Download the model if it doesn't exist locally
+        if not local_path.exists():
+            st.write(f"Downloading model from: {model_url}")
+            os.makedirs(local_path.parent, exist_ok=True)
+            response = requests.get(model_url)
+            if response.status_code != 200:
+                st.error(f"Failed to download model from: {model_url}")
+                return None
             with open(local_path, "wb") as f:
-                for chunk in response.iter_content(chunk_size=1024):
-                    f.write(chunk)
-            st.success(f"Model downloaded successfully: {local_path}")
-        else:
-            st.error(f"Failed to download model from: {model_url}")
+                f.write(response.content)
+
+        # Load the model
+        st.write(f"Loading model from: {local_path}")
+        model = YOLO(local_path)
+
+        # Verify the model architecture
+        if not hasattr(model, "predictor"):
+            st.error(f"Invalid YOLO model architecture: {model_name}")
             return None
 
-    # Load the model
-    try:
-        model = YOLO(local_path)
-        st.write(f"Model {model_name} loaded successfully")
+        st.success(f"Model {model_name} loaded successfully")
         return model
     except Exception as e:
         st.error(f"Error loading model {model_name}: {str(e)}")
