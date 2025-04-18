@@ -5,12 +5,12 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
+import os  # Import os
+from pathlib import Path
 
 # ========================
 # Data Configuration
 # ========================
-
-# Model evaluation metrics
 metrics_data = {
     "Model": ["YOLOv10n", "YOLO11n", "YOLOv12n"],
     "mAP50": [0.773, 0.854, 0.859],
@@ -24,18 +24,22 @@ metrics_data = {
 
 df = pd.DataFrame(metrics_data)
 
+# ========================
 # Pre-trained models configuration
+# Make sure to adjust these paths based on your actual file structure
+BASE_DIR = Path(__file__).parent  # Gets the directory where app.py is located
+
 MODELS = {
     "YOLOv10n": {
-        "path": "NuInseg/NuInsegyolov10/100epochs/weights/best.pt",
+        "path": str(BASE_DIR / "NuInseg/NuInsegyolov10/100epochs/weights/best.pt"),
         "description": "Base model with 8.2 GFLOPs"
     },
     "YOLO11n": {
-        "path": "NuInseg/NuInsegyolov11/100epochs2/weights/best.pt",
+        "path": str(BASE_DIR / "NuInseg/NuInsegyolov11/100epochs2/weights/best.pt"),
         "description": "Intermediate model with 6.3 GFLOPs"
     },
     "YOLOv12n": {
-        "path": "NuInseg/NuInsegyolov12/100epochs/weights/best.pt",
+        "path": str(BASE_DIR / "NuInseg/NuInsegyolov12/100epochs/weights/best.pt"),
         "description": "Optimized model with 6.3 GFLOPs and 4.24it/s speed"
     }
 }
@@ -54,7 +58,18 @@ st.set_page_config(
 # ========================
 @st.cache_resource
 def load_model(path):
-    return YOLO(path)
+    try:
+        st.write(f"Loading model from: {path}")
+        if not os.path.exists(path):
+            st.error(f"Model file not found: {path}")
+            raise FileNotFoundError(f"No model file at {path}")
+
+        model = YOLO(path)
+        st.write("Model loaded successfully")
+        return model
+    except Exception as e:
+        st.error(f"Error loading model: {e}")
+        return None # Return None if loading fails
 
 # ========================
 # Main Interface
@@ -76,50 +91,53 @@ with analysis_tab:
     # Load selected model
     model = load_model(MODELS[selected_model]["path"])
 
-    # Main detection interface
-    uploaded_file = st.file_uploader("Upload histology image", type=["png","jpg","tiff"], key="detection_uploader")
+    if model is not None:  # Only proceed if the model loaded successfully
+        # Main detection interface
+        uploaded_file = st.file_uploader("Upload histology image", type=["png","jpg","tiff"], key="detection_uploader")
 
-    if uploaded_file:
-        image = Image.open(uploaded_file)
-        col1, col2 = st.columns([1, 2])
+        if uploaded_file:
+            image = Image.open(uploaded_file)
+            col1, col2 = st.columns([1, 2])
 
-        with col1:
-            st.image(image, caption="Original Image", use_container_width=True)
-            conf_thresh = st.slider("Confidence Threshold", 0.1, 0.9, 0.5, key="detection_conf")
+            with col1:
+                st.image(image, caption="Original Image", use_container_width=True)
+                conf_thresh = st.slider("Confidence Threshold", 0.1, 0.9, 0.5, key="detection_conf")
 
-            if st.button("Run Nuclei Analysis"):
-                with st.spinner("Analyzing nuclei..."):
-                    results = model.predict(image, conf=conf_thresh)
-                    st.session_state.results = results[0]
-                    st.session_state.boxes = results[0].boxes.data.cpu().numpy()
+                if st.button("Run Nuclei Analysis"):
+                    with st.spinner("Analyzing nuclei..."):
+                        results = model.predict(image, conf=conf_thresh)
+                        st.session_state.results = results[0]
+                        st.session_state.boxes = results[0].boxes.data.cpu().numpy()
 
-        if 'results' in st.session_state:
-            with col2:
-                st.image(st.session_state.results.plot(), caption="Detection Results", use_container_width=True)
-                
-                # Detection metrics
-                nuclei_count = len(st.session_state.boxes)
-                avg_confidence = st.session_state.boxes[:, 4].mean()
-                
-                st.metric("Total Nuclei Detected", nuclei_count)
-                st.metric("Average Confidence", f"{avg_confidence:.2%}")
-                
-                # Dataframe
-                detection_df = pd.DataFrame(
-                    st.session_state.boxes, 
-                    columns=["x1", "y1", "x2", "y2", "conf", "class"]
-                )
-                st.dataframe(
-                    detection_df.sort_values("conf", ascending=False),
-                    use_container_width=True
-                )
+            if 'results' in st.session_state:
+                with col2:
+                    st.image(st.session_state.results.plot(), caption="Detection Results", use_container_width=True)
 
+                    # Detection metrics
+                    nuclei_count = len(st.session_state.boxes)
+                    avg_confidence = st.session_state.boxes[:, 4].mean()
 
+                    st.metric("Total Nuclei Detected", nuclei_count)
+                    st.metric("Average Confidence", f"{avg_confidence:.2%}")
+
+                    # Dataframe
+                    detection_df = pd.DataFrame(
+                        st.session_state.boxes,
+                        columns=["x1", "y1", "x2", "y2", "conf", "class"]
+                    )
+                    st.dataframe(
+                        detection_df.sort_values("conf", ascending=False),
+                        use_container_width=True
+                    )
+    else:
+        st.error("Failed to load the selected model.")
+
+    # Add the rest of your UI related to the analysis tab here
 
 with metrics_tab:
     # Evaluation metrics dashboard
     st.header("📊 Model Performance Evaluation")
-    
+
     # Key metrics
     st.subheader("Key Performance Indicators")
     col1, col2, col3 = st.columns(3)
@@ -146,55 +164,55 @@ with metrics_tab:
     # Visualizations
     st.subheader("Performance Visualizations")
     viz_tab1, viz_tab2, viz_tab3 = st.tabs(["Accuracy Metrics", "Efficiency Analysis", "Model Breakdown"])
-    
+
     with viz_tab1:
         fig1, ax1 = plt.subplots(figsize=(10,6))
         sns.barplot(data=df, x="Model", y="mAP50", palette="viridis", ax=ax1)
         ax1.set_title("mAP50 Comparison")
         st.pyplot(fig1)
-        
+
         fig2, ax2 = plt.subplots(figsize=(10,6))
         sns.barplot(data=df, x="Model", y="mAP50-95", palette="magma", ax=ax2)
         ax2.set_title("mAP50-95 Comparison")
         st.pyplot(fig2)
-    
+
     with viz_tab2:
         fig3, ax3 = plt.subplots(figsize=(10,6))
         sns.barplot(data=df, x="Model", y="GFLOPs", palette="coolwarm", ax=ax3)
         ax3.set_title("Computational Requirements")
         st.pyplot(fig3)
-        
+
         fig4, ax4 = plt.subplots(figsize=(10,6))
         sns.lineplot(data=df, x="Model", y="Inference Speed (it/s)", marker="o", color="#FF6B6B", ax=ax4)
         ax4.set_title("Inference Speed Comparison")
         st.pyplot(fig4)
-    
+
     with viz_tab3:
         selected_model = st.selectbox("Select Model for Detailed Analysis", df["Model"], key="metrics_model")
         model_data = df[df["Model"] == selected_model].iloc[0]
-        
+
         st.subheader(f"🧬 {selected_model} Specifications")
         cols = st.columns(4)
         cols[0].metric("mAP50", f"{model_data['mAP50']*100:.1f}%")
         cols[1].metric("mAP50-95", f"{model_data['mAP50-95']*100:.1f}%")
         cols[2].metric("Precision", f"{model_data['Precision']*100:.1f}%")
         cols[3].metric("Recall", f"{model_data['Recall']*100:.1f}%")
-        
+
         # Radar chart
         st.subheader("Performance Radar Chart")
         categories = ["mAP50", "mAP50-95", "Precision", "Recall", "Inference Speed (it/s)"]
         angles = np.linspace(0, 2 * np.pi, len(categories), endpoint=False).tolist()
         angles += angles[:1]
-        
+
         fig5 = plt.figure(figsize=(8,8))
         ax5 = fig5.add_subplot(111, polar=True)
-        
+
         for idx, model in df.iterrows():
             values = model[categories].tolist()
             values += values[:1]
             ax5.plot(angles, values, label=model["Model"])
             ax5.fill(angles, values, alpha=0.25)
-        
+
         ax5.set_thetagrids(np.degrees(angles[:-1]), categories)
         ax5.legend(loc='upper right', bbox_to_anchor=(1.2, 1.1))
         st.pyplot(fig5)
