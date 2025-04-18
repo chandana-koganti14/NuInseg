@@ -29,15 +29,15 @@ df = pd.DataFrame(metrics_data)
 # ========================
 MODELS = {
     "YOLOv10n": {
-        "path": "NuInseg/NuInsegyolov10/100epochs/weights/best.pt",
+        "path": "NuInsegyolov10/100epochs/weights/best.pt",
         "description": "Base model with 8.2 GFLOPs"
     },
     "YOLO11n": {
-        "path": "NuInseg/NuInsegyolov11/100epochs2/weights/best.pt",
+        "path": "NuInsegyolov11/100epochs2/weights/best.pt",
         "description": "Intermediate model with 6.3 GFLOPs"
     },
     "YOLOv12n": {
-        "path": "NuInseg/NuInsegyolov12/100epochs/weights/best.pt",
+        "path": "NuInsegyolov12/100epochs/weights/best.pt",
         "description": "Optimized model with 6.3 GFLOPs and 4.24it/s speed"
     }
 }
