@@ -1,5 +1,5 @@
 streamlit==1.31.0
-ultralytics==8.3.40
+ultralytics==8.3.78 
 opencv-python-headless==4.10.0.84
 pandas==2.0.3
 numpy==1.26.0  # KEY FIX: Compatible with opencv-python-headless
