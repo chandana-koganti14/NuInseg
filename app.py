@@ -77,17 +77,18 @@ with analysis_tab:
     model = load_model(MODELS[selected_model]["path"])
 
     # Main detection interface
-    uploaded_file = st.file_uploader("Upload histology image", type=["png","jpg","tiff"], key="detection_uploader")
+    uploaded_file = st.file_uploader("Upload histology image", type=["png", "jpg", "tiff"])
 
-    if uploaded_file:
+if uploaded_file is not None: # Check if the file is uploaded
+    try:
         image = Image.open(uploaded_file)
         col1, col2 = st.columns([1, 2])
 
         with col1:
             st.image(image, caption="Original Image", use_container_width=True)
-            conf_thresh = st.slider("Confidence Threshold", 0.1, 0.9, 0.5, key="detection_conf")
+            conf_thresh = st.slider("Confidence Threshold", 0.1, 0.9, 0.5)
 
-            if st.button("Run Nuclei Analysis"):
+            if st.button("Run Analysis"):
                 with st.spinner("Analyzing nuclei..."):
                     results = model.predict(image, conf=conf_thresh)
                     st.session_state.results = results[0]
@@ -96,23 +97,29 @@ with analysis_tab:
         if 'results' in st.session_state:
             with col2:
                 st.image(st.session_state.results.plot(), caption="Detection Results", use_container_width=True)
-                
+
                 # Detection metrics
                 nuclei_count = len(st.session_state.boxes)
                 avg_confidence = st.session_state.boxes[:, 4].mean()
-                
+
                 st.metric("Total Nuclei Detected", nuclei_count)
                 st.metric("Average Confidence", f"{avg_confidence:.2%}")
-                
+
                 # Dataframe
                 detection_df = pd.DataFrame(
-                    st.session_state.boxes, 
+                    st.session_state.boxes,
                     columns=["x1", "y1", "x2", "y2", "conf", "class"]
                 )
                 st.dataframe(
                     detection_df.sort_values("conf", ascending=False),
                     use_container_width=True
                 )
+
+    except Exception as e:
+        st.error(f"Error processing the uploaded image: {e}") # error for file upload
+else:
+    st.info("Please upload an image to proceed.") # if no file is uploaded
+
 
 with metrics_tab:
     # Evaluation metrics dashboard
