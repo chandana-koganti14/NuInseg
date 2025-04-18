@@ -10,89 +10,71 @@ import streamlit as st
 from pathlib import Path
 
 
-# ========================
-# Data Configuration
-# ========================
+import streamlit as st
+from ultralytics import YOLO
+from PIL import Image
+import pandas as pd
+from pathlib import Path
+import subprocess
 
-# Model evaluation metrics
-metrics_data = {
-    "Model": ["YOLOv10n", "YOLO11n", "YOLOv12n"],
-    "mAP50": [0.773, 0.854, 0.859],
-    "mAP50-95": [0.421, 0.495, 0.5],
-    "Precision": [0.766, 0.829, 0.835],
-    "Recall": [0.697, 0.774, 0.786],
-    "GFLOPs": [8.2, 6.3, 6.3],
-    "Inference Speed (it/s)": [1.47, 2.92, 4.24],
-    "Parameters": ["2,694,806", "2,582,347", "2,556,923"]
-}
-
-df = pd.DataFrame(metrics_data)
-
-# Pre-trained models configuration
-MODELS = {
-    "YOLOv10n": {
-        "path": str(Path(__file__).parent / "models/yolov10n.pt"),
-        "description": "Lightweight nuclei detection"
-    },
-    "YOLOv11n": {
-        "path": str(Path(__file__).parent / "models/yolov11n.pt"),
-        "description": "Balanced accuracy/speed"
-    }
-}
-
-# Model validation
-for model_name, config in MODELS.items():
-    if not Path(config["path"]).exists():
-        st.error(f"Model file missing: {config['path']}")
-        st.stop()
-
-# Widget
-selected_model = st.sidebar.selectbox(
-    "Model",
-    options=list(MODELS.keys()),
-    format_func=lambda x: f"{x} ({MODELS[x]['description']})"
-)
-
-# ========================
-# Streamlit Configuration
-# ========================
+# Move page config to ABSOLUTE FIRST Streamlit command
 st.set_page_config(
-    page_title="NuInSeg Comprehensive Suite",
-    page_icon="🔬",
+    page_title="NuInSeg Analyzer",
+    page_icon=":microscope:",
     layout="wide"
 )
 
-# ========================
-# Model Loading
-# ========================
+# Temporary setup commands (must come AFTER set_page_config)
+st.write("Initializing environment...")
+clear_result = subprocess.run(["/bin/bash", "clear_cache.sh"], capture_output=True, text=True)
+setup_result = subprocess.run(["/bin/bash", "post_setup.sh"], capture_output=True, text=True)
+st.write("Setup logs:", setup_result.stdout)
+
+# Configure models
+MODELS = {
+    "YOLOv10n": {
+        "path": str(Path(__file__).parent / "models/yolov10n.pt"),
+        "description": "Fastest model for quick analysis"
+    },
+    "YOLOv11n": {
+        "path": str(Path(__file__).parent / "models/yolov11n.pt"),
+        "description": "Balanced accuracy and speed"
+    }
+}
+
+# Validate models
+for model_name, config in MODELS.items():
+    if not Path(config["path"]).exists():
+        st.error(f"Critical error: Model file missing at {config['path']}")
+        st.stop()
+
+# Model loading with caching
 @st.cache_resource
 def load_model(path):
+    if not Path(path).exists():
+        st.error(f"Model file not found: {path}")
+        st.stop()
     return YOLO(path)
 
-# ========================
-# Main Interface
-# ========================
-st.title("🔬 NuInSeg Nuclei Analysis Suite")
+model = load_model(MODELS[st.session_state.get('selected_model', 'YOLOv10n')]["path"])
 
-# Navigation
-analysis_tab, metrics_tab = st.tabs(["Nuclei Detection", "Model Evaluation"])
+# Main interface
+st.title("NuInSeg Nuclear Analysis")
 
-with analysis_tab:
-    # Sidebar for model selection
-    st.sidebar.title("Model Selection")
-    selected_model = st.sidebar.selectbox(
-        "Choose Detection Model",
-        list(MODELS.keys()),
-        format_func=lambda x: f"{x} ({MODELS[x]['description']})"
+# Sidebar controls
+with st.sidebar:
+    st.header("Model Configuration")
+    selected_model = st.selectbox(
+        "Select Model",
+        options=list(MODELS.keys()),
+        format_func=lambda x: f"{x} ({MODELS[x]['description']})",
+        key='selected_model'
     )
 
-    # Load selected model
-    model = load_model(MODELS[selected_model]["path"])
+# File uploader
+uploaded_file = st.file_uploader("Upload histology image", type=["png", "jpg", "jpeg", "tiff"])
 
-    # Main detection interface
-    uploaded_file = st.file_uploader("Upload histology image", type=["png", "jpg", "tiff"])
-
-if uploaded_file is not None: # Check if the file is uploaded
+if uploaded_file is not None:
     try:
         image = Image.open(uploaded_file)
         col1, col2 = st.columns([1, 2])
@@ -100,38 +82,43 @@ if uploaded_file is not None: # Check if the file is uploaded
         with col1:
             st.image(image, caption="Original Image")
             conf_thresh = st.slider("Confidence Threshold", 0.1, 0.9, 0.5)
-
-            if st.button("Run Analysis"):
-                with st.spinner("Analyzing nuclei..."):
+            
+            if st.button("Analyze Nuclei"):
+                with st.spinner("Processing image..."):
                     results = model.predict(image, conf=conf_thresh)
                     st.session_state.results = results[0]
                     st.session_state.boxes = results[0].boxes.data.cpu().numpy()
 
         if 'results' in st.session_state:
             with col2:
-                st.image(st.session_state.results.plot(), caption="Detection Results")
-
-                # Detection metrics
+                st.image(
+                    st.session_state.results.plot(),
+                    caption="Detection Results",
+                    channels="BGR"
+                )
+                
+                # Metrics
                 nuclei_count = len(st.session_state.boxes)
                 avg_confidence = st.session_state.boxes[:, 4].mean()
-
-                st.metric("Total Nuclei Detected", nuclei_count)
+                
+                st.metric("Detected Nuclei", nuclei_count)
                 st.metric("Average Confidence", f"{avg_confidence:.2%}")
-
-                # Dataframe
+                
+                # Data table
                 detection_df = pd.DataFrame(
                     st.session_state.boxes,
-                    columns=["x1", "y1", "x2", "y2", "conf", "class"]
+                    columns=["x_min", "y_min", "x_max", "y_max", "confidence", "class"]
                 )
                 st.dataframe(
-                    detection_df.sort_values("conf", ascending=False),
+                    detection_df.sort_values("confidence", ascending=False),
                     use_container_width=True
                 )
 
     except Exception as e:
-        st.error(f"Error processing the uploaded image: {e}") # error for file upload
+        st.error(f"Image processing error: {str(e)}")
 else:
-    st.info("Please upload an image to proceed.") # if no file is uploaded
+    st.info("Please upload an image to begin analysis")
+
 
 
 with metrics_tab:
