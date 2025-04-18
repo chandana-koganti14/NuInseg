@@ -1,0 +1,8 @@
+streamlit==1.31.0
+ultralytics==8.2.0
+opencv-python-headless==4.9.0.80
+pandas==2.2.2
+numpy==2.0.0
+matplotlib==3.8.4
+seaborn==0.13.2
+Pillow==10.3.0
