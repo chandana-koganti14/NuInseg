@@ -1,0 +1,10 @@
+{"time":"2025-04-16T22:31:25.176310823Z","level":"INFO","msg":"started logging, with flags","port-filename":"/tmp/tmpcicir377/port-1989217.txt","pid":1989217,"debug":false,"disable-analytics":false}
+{"time":"2025-04-16T22:31:25.177284714Z","level":"INFO","msg":"FeatureState","shutdownOnParentExitEnabled":false}
+{"time":"2025-04-16T22:31:25.177980417Z","level":"INFO","msg":"Will exit if parent process dies.","ppid":1989217}
+{"time":"2025-04-16T22:31:25.177981206Z","level":"INFO","msg":"server is running","addr":{"IP":"127.0.0.1","Port":38885,"Zone":""}}
+{"time":"2025-04-16T22:31:25.369191777Z","level":"INFO","msg":"connection: ManageConnectionData: new connection created","id":"127.0.0.1:47480"}
+{"time":"2025-04-16T22:31:25.574093598Z","level":"INFO","msg":"handleInformInit: received","streamId":"qfokn7a4","id":"127.0.0.1:47480"}
+{"time":"2025-04-16T22:31:25.681781472Z","level":"INFO","msg":"handleInformInit: stream started","streamId":"qfokn7a4","id":"127.0.0.1:47480"}
+{"time":"2025-04-16T23:05:10.2939149Z","level":"INFO","msg":"handleInformFinish: finish message received","streamId":"qfokn7a4","id":"127.0.0.1:47480"}
+{"time":"2025-04-16T23:05:10.294130878Z","level":"INFO","msg":"handleInformFinish: stream closed","streamId":"qfokn7a4","id":"127.0.0.1:47480"}
+{"time":"2025-04-17T04:13:08.244922013Z","level":"INFO","msg":"Parent process exited, terminating service process."}

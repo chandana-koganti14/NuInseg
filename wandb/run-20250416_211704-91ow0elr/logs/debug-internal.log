@@ -1,0 +1,21 @@
+{"time":"2025-04-16T21:17:04.078262316Z","level":"INFO","msg":"using version","core version":"0.18.5"}
+{"time":"2025-04-16T21:17:04.078273118Z","level":"INFO","msg":"created symlink","path":"/mnt/storage2/PanNuke/NuInseg/wandb/run-20250416_211704-91ow0elr/logs/debug-core.log"}
+{"time":"2025-04-16T21:17:04.187711518Z","level":"INFO","msg":"created new stream","id":"91ow0elr"}
+{"time":"2025-04-16T21:17:04.187760936Z","level":"INFO","msg":"stream: started","id":"91ow0elr"}
+{"time":"2025-04-16T21:17:04.187793246Z","level":"INFO","msg":"handler: started","stream_id":{"value":"91ow0elr"}}
+{"time":"2025-04-16T21:17:04.187935331Z","level":"INFO","msg":"sender: started","stream_id":"91ow0elr"}
+{"time":"2025-04-16T21:17:04.187940121Z","level":"INFO","msg":"writer: Do: started","stream_id":{"value":"91ow0elr"}}
+{"time":"2025-04-16T21:17:04.541311998Z","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-04-16T21:45:38.778177686Z","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-04-16T21:45:38.778696394Z","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-04-16T21:45:39.778555288Z","level":"INFO","msg":"handler: operation stats","stats":{"operations":[{"desc":"uploading artifact run_91ow0elr_model","runtime_seconds":1.410920868},{"desc":"uploading artifact run-91ow0elr-curvesRecallConfidenceB_table","runtime_seconds":1.008873083}],"total_operations":2}}
+{"time":"2025-04-16T21:46:08.953292734Z","level":"INFO","msg":"api: retrying error","error":"Post \"https://api.wandb.ai/graphql\": net/http: request canceled (Client.Timeout exceeded while awaiting headers)"}
+{"time":"2025-04-16T21:46:12.01862823Z","level":"WARN","msg":"No job ingredients found, not creating job artifact"}
+{"time":"2025-04-16T21:46:12.018651304Z","level":"WARN","msg":"No source type found, not creating job artifact"}
+{"time":"2025-04-16T21:46:12.018655156Z","level":"INFO","msg":"sender: sendDefer: no job artifact to save"}
+{"time":"2025-04-16T21:46:12.068870396Z","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-04-16T21:46:13.173609607Z","level":"INFO","msg":"stream: closing","id":"91ow0elr"}
+{"time":"2025-04-16T21:46:13.173623553Z","level":"INFO","msg":"handler: closed","stream_id":{"value":"91ow0elr"}}
+{"time":"2025-04-16T21:46:13.17363418Z","level":"INFO","msg":"writer: Close: closed","stream_id":{"value":"91ow0elr"}}
+{"time":"2025-04-16T21:46:13.173638205Z","level":"INFO","msg":"sender: closed","stream_id":"91ow0elr"}
+{"time":"2025-04-16T21:46:13.173669797Z","level":"INFO","msg":"stream: closed","id":"91ow0elr"}

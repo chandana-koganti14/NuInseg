@@ -1,0 +1,6 @@
+names:
+- Nuclei
+nc: 1
+test: /mnt/storage2/PanNuke/NuInseg/yolo_dataset/test/images
+train: /mnt/storage2/PanNuke/NuInseg/yolo_dataset/train/images
+val: /mnt/storage2/PanNuke/NuInseg/yolo_dataset/valid/images

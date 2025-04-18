@@ -1,0 +1,22 @@
+{"time":"2025-04-16T22:31:25.574286454Z","level":"INFO","msg":"using version","core version":"0.18.5"}
+{"time":"2025-04-16T22:31:25.574297641Z","level":"INFO","msg":"created symlink","path":"/mnt/storage2/PanNuke/NuInseg/wandb/run-20250416_223125-qfokn7a4/logs/debug-core.log"}
+{"time":"2025-04-16T22:31:25.681735172Z","level":"INFO","msg":"created new stream","id":"qfokn7a4"}
+{"time":"2025-04-16T22:31:25.68177652Z","level":"INFO","msg":"stream: started","id":"qfokn7a4"}
+{"time":"2025-04-16T22:31:25.681802851Z","level":"INFO","msg":"sender: started","stream_id":"qfokn7a4"}
+{"time":"2025-04-16T22:31:25.681780414Z","level":"INFO","msg":"writer: Do: started","stream_id":{"value":"qfokn7a4"}}
+{"time":"2025-04-16T22:31:25.68182155Z","level":"INFO","msg":"handler: started","stream_id":{"value":"qfokn7a4"}}
+{"time":"2025-04-16T22:31:25.960205089Z","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-04-16T23:03:26.288006402Z","level":"INFO","msg":"api: retrying error","error":"Post \"https://api.wandb.ai/graphql\": net/http: request canceled (Client.Timeout exceeded while awaiting headers)"}
+{"time":"2025-04-16T23:04:36.055853443Z","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-04-16T23:04:36.056277462Z","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-04-16T23:04:37.056320483Z","level":"INFO","msg":"handler: operation stats","stats":{"operations":[{"desc":"uploading artifact run_qfokn7a4_model","runtime_seconds":1.361754388},{"desc":"updating run config","runtime_seconds":1.350266168}],"total_operations":2}}
+{"time":"2025-04-16T23:05:05.707166351Z","level":"INFO","msg":"api: retrying error","error":"Post \"https://api.wandb.ai/graphql\": context deadline exceeded"}
+{"time":"2025-04-16T23:05:09.118152316Z","level":"WARN","msg":"No job ingredients found, not creating job artifact"}
+{"time":"2025-04-16T23:05:09.118180186Z","level":"WARN","msg":"No source type found, not creating job artifact"}
+{"time":"2025-04-16T23:05:09.118185253Z","level":"INFO","msg":"sender: sendDefer: no job artifact to save"}
+{"time":"2025-04-16T23:05:09.168421574Z","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-04-16T23:05:10.2939824Z","level":"INFO","msg":"stream: closing","id":"qfokn7a4"}
+{"time":"2025-04-16T23:05:10.294008746Z","level":"INFO","msg":"handler: closed","stream_id":{"value":"qfokn7a4"}}
+{"time":"2025-04-16T23:05:10.294068503Z","level":"INFO","msg":"writer: Close: closed","stream_id":{"value":"qfokn7a4"}}
+{"time":"2025-04-16T23:05:10.294089546Z","level":"INFO","msg":"sender: closed","stream_id":"qfokn7a4"}
+{"time":"2025-04-16T23:05:10.294123105Z","level":"INFO","msg":"stream: closed","id":"qfokn7a4"}

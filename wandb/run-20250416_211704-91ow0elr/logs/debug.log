@@ -1,0 +1,80 @@
+2025-04-16 21:17:04,073 INFO    MainThread:1917601 [wandb_setup.py:_flush():79] Current SDK version is 0.18.5
+2025-04-16 21:17:04,073 INFO    MainThread:1917601 [wandb_setup.py:_flush():79] Configure stats pid to 1917601
+2025-04-16 21:17:04,073 INFO    MainThread:1917601 [wandb_setup.py:_flush():79] Loading settings from /home/skogant3/.config/wandb/settings
+2025-04-16 21:17:04,073 INFO    MainThread:1917601 [wandb_setup.py:_flush():79] Loading settings from /mnt/storage2/PanNuke/NuInseg/wandb/settings
+2025-04-16 21:17:04,073 INFO    MainThread:1917601 [wandb_setup.py:_flush():79] Loading settings from environment variables: {}
+2025-04-16 21:17:04,073 INFO    MainThread:1917601 [wandb_setup.py:_flush():79] Applying setup settings: {'mode': None, '_disable_service': None}
+2025-04-16 21:17:04,073 INFO    MainThread:1917601 [wandb_setup.py:_flush():79] Inferring run settings from compute environment: {'program': '<python with no main file>'}
+2025-04-16 21:17:04,073 INFO    MainThread:1917601 [wandb_setup.py:_flush():79] Applying login settings: {}
+2025-04-16 21:17:04,073 INFO    MainThread:1917601 [wandb_setup.py:_flush():79] Applying login settings: {'api_key': '***REDACTED***'}
+2025-04-16 21:17:04,073 INFO    MainThread:1917601 [wandb_setup.py:_flush():79] Applying login settings: {}
+2025-04-16 21:17:04,073 ERROR   MainThread:1917601 [wandb_setup.py:_flush():81] error in wandb.init()
+Traceback (most recent call last):
+  File "/home/skogant3/.local/lib/python3.8/site-packages/IPython/core/interactiveshell.py", line 3508, in run_code
+    exec(code_obj, self.user_global_ns, self.user_ns)
+  File "/tmp/ipykernel_1917601/1172824989.py", line 1, in <module>
+    results = model.train(data='/mnt/storage2/PanNuke/NuInseg/yolo_dataset/data.yaml',
+  File "/home/skogant3/miniconda3/envs/mask/lib/python3.8/site-packages/ultralytics/engine/model.py", line 657, in train
+    self.trainer.train()
+  File "/home/skogant3/miniconda3/envs/mask/lib/python3.8/site-packages/ultralytics/engine/trainer.py", line 213, in train
+    self._do_train(world_size)
+  File "/home/skogant3/miniconda3/envs/mask/lib/python3.8/site-packages/ultralytics/engine/trainer.py", line 327, in _do_train
+    self._setup_train(world_size)
+  File "/home/skogant3/miniconda3/envs/mask/lib/python3.8/site-packages/ultralytics/engine/trainer.py", line 240, in _setup_train
+    self.run_callbacks("on_pretrain_routine_start")
+  File "/home/skogant3/miniconda3/envs/mask/lib/python3.8/site-packages/ultralytics/engine/trainer.py", line 176, in run_callbacks
+    callback(self)
+  File "/home/skogant3/miniconda3/envs/mask/lib/python3.8/site-packages/ultralytics/utils/callbacks/wb.py", line 112, in on_pretrain_routine_start
+    wb.run or wb.init(project=trainer.args.project or "YOLOv8", name=trainer.args.name, config=vars(trainer.args))
+  File "/home/skogant3/miniconda3/envs/mask/lib/python3.8/site-packages/wandb/sdk/wandb_init.py", line 1270, in init
+    wandb._sentry.reraise(e)
+  File "/home/skogant3/miniconda3/envs/mask/lib/python3.8/site-packages/wandb/analytics/sentry.py", line 161, in reraise
+    raise exc.with_traceback(sys.exc_info()[2])
+  File "/home/skogant3/miniconda3/envs/mask/lib/python3.8/site-packages/wandb/sdk/wandb_init.py", line 1255, in init
+    wi.setup(kwargs)
+  File "/home/skogant3/miniconda3/envs/mask/lib/python3.8/site-packages/wandb/sdk/wandb_init.py", line 321, in setup
+    settings._apply_init(kwargs)
+  File "/home/skogant3/miniconda3/envs/mask/lib/python3.8/site-packages/wandb/sdk/wandb_settings.py", line 1901, in _apply_init
+    self.update(init_settings, source=Source.INIT)
+  File "/home/skogant3/miniconda3/envs/mask/lib/python3.8/site-packages/wandb/sdk/wandb_settings.py", line 1530, in update
+    self.__dict__[key].update(settings.pop(key), source=source)
+  File "/home/skogant3/miniconda3/envs/mask/lib/python3.8/site-packages/wandb/sdk/wandb_settings.py", line 601, in update
+    self._value = self._validate(self._preprocess(value))
+  File "/home/skogant3/miniconda3/envs/mask/lib/python3.8/site-packages/wandb/sdk/wandb_settings.py", line 571, in _validate
+    if not v(value):
+  File "/home/skogant3/miniconda3/envs/mask/lib/python3.8/site-packages/wandb/sdk/wandb_settings.py", line 1027, in _validate_project
+    raise UsageError(
+wandb.errors.errors.UsageError: Invalid project name '/mnt/storage2/PanNuke/NuInseg/yolo_dataset/results': cannot contain characters '/,\\,#,?,%,:', found '/'
+2025-04-16 21:17:04,073 INFO    MainThread:1917601 [wandb_init.py:_log_setup():534] Logging user logs to /mnt/storage2/PanNuke/NuInseg/wandb/run-20250416_211704-91ow0elr/logs/debug.log
+2025-04-16 21:17:04,073 INFO    MainThread:1917601 [wandb_init.py:_log_setup():535] Logging internal logs to /mnt/storage2/PanNuke/NuInseg/wandb/run-20250416_211704-91ow0elr/logs/debug-internal.log
+2025-04-16 21:17:04,074 INFO    MainThread:1917601 [wandb_init.py:_jupyter_setup():480] configuring jupyter hooks <wandb.sdk.wandb_init._WandbInit object at 0x7fb003fbbc10>
+2025-04-16 21:17:04,074 INFO    MainThread:1917601 [wandb_init.py:init():621] calling init triggers
+2025-04-16 21:17:04,074 INFO    MainThread:1917601 [wandb_init.py:init():628] wandb.init called with sweep_config: {}
+config: {'task': 'detect', 'mode': 'train', 'model': 'yolov10n.pt', 'data': '/mnt/storage2/PanNuke/NuInseg/yolo_dataset/data.yaml', 'epochs': 100, 'time': None, 'patience': 0, 'batch': 4, 'imgsz': 512, 'save': True, 'save_period': -1, 'val_period': 1, 'cache': False, 'device': None, 'workers': 8, 'project': 'NuInseg', 'name': 'yolo_dataset_results_100', 'exist_ok': False, 'pretrained': True, 'optimizer': 'auto', 'verbose': True, 'seed': 0, 'deterministic': True, 'single_cls': False, 'rect': False, 'cos_lr': False, 'close_mosaic': 10, 'resume': False, 'amp': True, 'fraction': 1.0, 'profile': False, 'freeze': None, 'multi_scale': False, 'overlap_mask': True, 'mask_ratio': 4, 'dropout': 0.0, 'val': True, 'split': 'val', 'save_json': False, 'save_hybrid': False, 'conf': None, 'iou': 0.7, 'max_det': 300, 'half': False, 'dnn': False, 'plots': True, 'source': None, 'vid_stride': 1, 'stream_buffer': False, 'visualize': False, 'augment': False, 'agnostic_nms': False, 'classes': None, 'retina_masks': False, 'embed': None, 'show': False, 'save_frames': False, 'save_txt': False, 'save_conf': False, 'save_crop': False, 'show_labels': True, 'show_conf': True, 'show_boxes': True, 'line_width': None, 'format': 'torchscript', 'keras': False, 'optimize': False, 'int8': False, 'dynamic': False, 'simplify': False, 'opset': None, 'workspace': 4, 'nms': False, 'lr0': 0.01, 'lrf': 0.01, 'momentum': 0.937, 'weight_decay': 0.0005, 'warmup_epochs': 3.0, 'warmup_momentum': 0.8, 'warmup_bias_lr': 0.1, 'box': 7.5, 'cls': 0.5, 'dfl': 1.5, 'pose': 12.0, 'kobj': 1.0, 'label_smoothing': 0.0, 'nbs': 64, 'hsv_h': 0.015, 'hsv_s': 0.7, 'hsv_v': 0.4, 'degrees': 0.0, 'translate': 0.1, 'scale': 0.5, 'shear': 0.0, 'perspective': 0.0, 'flipud': 0.0, 'fliplr': 0.5, 'bgr': 0.0, 'mosaic': 1.0, 'mixup': 0.0, 'copy_paste': 0.0, 'auto_augment': 'randaugment', 'erasing': 0.4, 'crop_fraction': 1.0, 'cfg': None, 'tracker': 'botsort.yaml', 'save_dir': 'NuInseg/yolo_dataset_results_100'}
+2025-04-16 21:17:04,074 INFO    MainThread:1917601 [wandb_init.py:init():671] starting backend
+2025-04-16 21:17:04,074 INFO    MainThread:1917601 [wandb_init.py:init():675] sending inform_init request
+2025-04-16 21:17:04,075 INFO    MainThread:1917601 [backend.py:_multiprocessing_setup():104] multiprocessing start_methods=fork,spawn,forkserver, using: spawn
+2025-04-16 21:17:04,075 INFO    MainThread:1917601 [wandb_init.py:init():688] backend started and connected
+2025-04-16 21:17:04,078 INFO    MainThread:1917601 [wandb_run.py:_label_probe_notebook():1342] probe notebook
+2025-04-16 21:17:04,078 INFO    MainThread:1917601 [wandb_init.py:init():783] updated telemetry
+2025-04-16 21:17:04,095 INFO    MainThread:1917601 [wandb_init.py:init():816] communicating run to backend with 90.0 second timeout
+2025-04-16 21:17:04,538 INFO    MainThread:1917601 [wandb_init.py:init():867] starting run threads in backend
+2025-04-16 21:17:04,665 INFO    MainThread:1917601 [wandb_run.py:_console_start():2463] atexit reg
+2025-04-16 21:17:04,665 INFO    MainThread:1917601 [wandb_run.py:_redirect():2311] redirect: wrap_raw
+2025-04-16 21:17:04,665 INFO    MainThread:1917601 [wandb_run.py:_redirect():2376] Wrapping output streams.
+2025-04-16 21:17:04,666 INFO    MainThread:1917601 [wandb_run.py:_redirect():2401] Redirects installed.
+2025-04-16 21:17:04,667 INFO    MainThread:1917601 [wandb_init.py:init():911] run started, returning control to user process
+2025-04-16 21:45:38,376 INFO    MainThread:1917601 [wandb_run.py:_config_callback():1390] config_cb ('_wandb', 'visualize', 'curves/Precision-Recall(B)') {'panel_type': 'Vega2', 'panel_config': {'panelDefId': 'wandb/area-under-curve/v0', 'fieldSettings': {'x': 'x', 'y': 'y', 'class': 'class'}, 'stringSettings': {'title': 'Precision-Recall(B)', 'x-axis-title': 'Recall', 'y-axis-title': 'Precision'}, 'transform': {'name': 'tableWithLeafColNames'}, 'userQuery': {'queryFields': [{'name': 'runSets', 'args': [{'name': 'runSets', 'value': '${runSets}'}], 'fields': [{'name': 'id', 'fields': []}, {'name': 'name', 'fields': []}, {'name': '_defaultColorIndex', 'fields': []}, {'name': 'summaryTable', 'args': [{'name': 'tableKey', 'value': 'curves/Precision-Recall(B)_table'}], 'fields': []}]}]}}} None
+2025-04-16 21:45:38,482 INFO    MainThread:1917601 [wandb_run.py:_config_callback():1390] config_cb ('_wandb', 'visualize', 'curves/F1-Confidence(B)') {'panel_type': 'Vega2', 'panel_config': {'panelDefId': 'wandb/area-under-curve/v0', 'fieldSettings': {'x': 'x', 'y': 'y', 'class': 'class'}, 'stringSettings': {'title': 'F1-Confidence(B)', 'x-axis-title': 'Confidence', 'y-axis-title': 'F1'}, 'transform': {'name': 'tableWithLeafColNames'}, 'userQuery': {'queryFields': [{'name': 'runSets', 'args': [{'name': 'runSets', 'value': '${runSets}'}], 'fields': [{'name': 'id', 'fields': []}, {'name': 'name', 'fields': []}, {'name': '_defaultColorIndex', 'fields': []}, {'name': 'summaryTable', 'args': [{'name': 'tableKey', 'value': 'curves/F1-Confidence(B)_table'}], 'fields': []}]}]}}} None
+2025-04-16 21:45:38,584 INFO    MainThread:1917601 [wandb_run.py:_config_callback():1390] config_cb ('_wandb', 'visualize', 'curves/Precision-Confidence(B)') {'panel_type': 'Vega2', 'panel_config': {'panelDefId': 'wandb/area-under-curve/v0', 'fieldSettings': {'x': 'x', 'y': 'y', 'class': 'class'}, 'stringSettings': {'title': 'Precision-Confidence(B)', 'x-axis-title': 'Confidence', 'y-axis-title': 'Precision'}, 'transform': {'name': 'tableWithLeafColNames'}, 'userQuery': {'queryFields': [{'name': 'runSets', 'args': [{'name': 'runSets', 'value': '${runSets}'}], 'fields': [{'name': 'id', 'fields': []}, {'name': 'name', 'fields': []}, {'name': '_defaultColorIndex', 'fields': []}, {'name': 'summaryTable', 'args': [{'name': 'tableKey', 'value': 'curves/Precision-Confidence(B)_table'}], 'fields': []}]}]}}} None
+2025-04-16 21:45:38,695 INFO    MainThread:1917601 [wandb_run.py:_config_callback():1390] config_cb ('_wandb', 'visualize', 'curves/Recall-Confidence(B)') {'panel_type': 'Vega2', 'panel_config': {'panelDefId': 'wandb/area-under-curve/v0', 'fieldSettings': {'x': 'x', 'y': 'y', 'class': 'class'}, 'stringSettings': {'title': 'Recall-Confidence(B)', 'x-axis-title': 'Confidence', 'y-axis-title': 'Recall'}, 'transform': {'name': 'tableWithLeafColNames'}, 'userQuery': {'queryFields': [{'name': 'runSets', 'args': [{'name': 'runSets', 'value': '${runSets}'}], 'fields': [{'name': 'id', 'fields': []}, {'name': 'name', 'fields': []}, {'name': '_defaultColorIndex', 'fields': []}, {'name': 'summaryTable', 'args': [{'name': 'tableKey', 'value': 'curves/Recall-Confidence(B)_table'}], 'fields': []}]}]}}} None
+2025-04-16 21:45:38,776 INFO    MainThread:1917601 [wandb_run.py:_finish():2158] finishing run koganti-saichandana14-kennesaw-state-university/NuInseg/91ow0elr
+2025-04-16 21:45:38,777 ERROR   MainThread:1917601 [jupyter.py:save_history():451] Run pip install nbformat to save notebook history
+2025-04-16 21:45:38,777 INFO    MainThread:1917601 [jupyter.py:save_ipynb():387] not saving jupyter notebook
+2025-04-16 21:45:38,777 INFO    MainThread:1917601 [wandb_init.py:_jupyter_teardown():462] cleaning up jupyter logic
+2025-04-16 21:45:38,777 INFO    MainThread:1917601 [wandb_run.py:_atexit_cleanup():2426] got exitcode: 0
+2025-04-16 21:45:38,777 INFO    MainThread:1917601 [wandb_run.py:_restore():2408] restore
+2025-04-16 21:45:38,777 INFO    MainThread:1917601 [wandb_run.py:_restore():2414] restore done
+2025-04-16 21:46:13,165 INFO    MainThread:1917601 [wandb_run.py:_footer_history_summary_info():3975] rendering history
+2025-04-16 21:46:13,166 INFO    MainThread:1917601 [wandb_run.py:_footer_history_summary_info():4007] rendering summary
+2025-04-16 21:46:13,171 INFO    MainThread:1917601 [wandb_run.py:_footer_sync_info():3934] logging synced files
