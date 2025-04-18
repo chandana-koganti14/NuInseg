@@ -29,18 +29,29 @@ metrics_data = {
 df = pd.DataFrame(metrics_data)
 
 # Pre-trained models configuration
-from pathlib import Path
-
-# Convert all paths to absolute using project root
-BASE_DIR = Path(__file__).parent
-MODEL_DIR = BASE_DIR / "models"  # Ensure models are in this folder
-
-# Example usage
 MODELS = {
-    "YOLOv10n": {"path": str(MODEL_DIR / "yolov10n.pt")},
-    "YOLOv11n": {"path": str(MODEL_DIR / "yolov11n.pt")}
+    "YOLOv10n": {
+        "path": str(Path(__file__).parent / "models/yolov10n.pt"),
+        "description": "Lightweight nuclei detection"
+    },
+    "YOLOv11n": {
+        "path": str(Path(__file__).parent / "models/yolov11n.pt"),
+        "description": "Balanced accuracy/speed"
+    }
 }
 
+# Model validation
+for model_name, config in MODELS.items():
+    if not Path(config["path"]).exists():
+        st.error(f"Model file missing: {config['path']}")
+        st.stop()
+
+# Widget
+selected_model = st.sidebar.selectbox(
+    "Model",
+    options=list(MODELS.keys()),
+    format_func=lambda x: f"{x} ({MODELS[x]['description']})"
+)
 
 # ========================
 # Streamlit Configuration
