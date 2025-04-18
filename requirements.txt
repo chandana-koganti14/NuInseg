@@ -1,3 +1,4 @@
+python==3.8.19
 streamlit==1.31.0
 ultralytics==8.3.40  # Match your local version
 opencv-python-headless==4.10.0.84  # From your pip list
@@ -8,4 +9,5 @@ seaborn==0.13.2
 Pillow==10.4.0  # From your pip list
 torch==2.4.1  # Essential for YOLO
 torchvision==0.19.1  # Essential for YOLO
-
+setuptools==60.2.0 # this is from ur pip list. use compatible
+wheel==0.43.0
