@@ -25,29 +25,6 @@ metrics_data = {
 df = pd.DataFrame(metrics_data)
 
 # ========================
-# Model Loading - Corrected Path Handling
-# ========================
-@st.cache_resource
-def load_model(model_name):  # Pass model_name instead of path
-    try:
-        # Construct the path based on the selected model
-        BASE_DIR = Path(__file__).parent
-        model_path = str(BASE_DIR / MODELS[model_name]["path"])  # Using model_name
-
-        st.write(f"Attempting to load model: {model_path}")  # Debug print
-
-        if not os.path.exists(model_path):
-            st.error(f"Model file not found at: {model_path}")
-            raise FileNotFoundError(f"Model file missing at {model_path}")
-
-        model = YOLO(model_path)
-        st.write(f"Model {model_name} loaded successfully")
-        return model
-    except Exception as e:
-        st.error(f"Error loading model {model_name}: {e}")
-        return None  # Important: Return None if loading fails
-
-# ========================
 # Pre-trained models configuration
 # ========================
 MODELS = {
@@ -75,6 +52,42 @@ st.set_page_config(
 )
 
 # ========================
+# Model Loading
+# ========================
+@st.cache_resource
+def load_model(model_name):
+    try:
+        BASE_DIR = Path(__file__).parent  # Define inside function
+        model_path = str(BASE_DIR / MODELS[model_name]["path"])
+
+        st.write(f"Loading model from: {model_path}")
+
+        if not os.path.exists(model_path):
+            st.error(f"Model file not found at: {model_path}")
+            raise FileNotFoundError(f"Model file missing at {model_path}")
+
+        # Verify model file exists
+        if Path(model_path).stat().st_size < 1024:
+            st.error(f"Model file corrupt or too small: {model_path}")
+            raise ValueError(f"Model file corrupt or too small")
+
+        model = YOLO(model_path)
+
+        # Verify the model architecture
+        if not hasattr(model, "predictor"):
+            st.error(f"Invalid YOLO model architecture: {model_name}")
+            raise ValueError(f"Invalid YOLO model architecture for {model_name}")
+
+        st.write(f"Model {model_name} loaded successfully")
+        return model
+    except FileNotFoundError as e:  # Capture the FileNotFoundError
+        st.error(f"FileNotFoundError: {str(e)}")
+        return None  # Return None if loading fails
+    except Exception as e:  # Capture all other exceptions
+        st.error(f"Error loading model {model_name}: {str(e)}")
+        return None
+
+# ========================
 # Main Interface
 # ========================
 st.title("🔬 NuInSeg Nuclei Analysis Suite")
@@ -91,7 +104,7 @@ with analysis_tab:
         format_func=lambda x: f"{x} ({MODELS[x]['description']})"
     )
 
-    # Load selected model - Pass Model Name
+    # Load selected model
     model = load_model(selected_model)
 
     if model is not None:
