@@ -121,9 +121,15 @@ with analysis_tab:
 
                 if st.button("Run Nuclei Analysis"):
                     with st.spinner("Analyzing nuclei..."):
-                        results = model.predict(image, conf=conf_thresh)
+                        image_np = np.array(image)
+
+                # Run prediction
+                    try:
+                        results = model.predict(source=image_np, conf=conf_thresh, save=False)
                         st.session_state.results = results[0]
                         st.session_state.boxes = results[0].boxes.data.cpu().numpy()
+                    except Exception as e:
+                        st.error(f"Error during prediction: {str(e)}")
 
             if 'results' in st.session_state:
                 with col2:
